@@ -176,3 +176,17 @@ We will now look at **information gain**. It measures **how much the entropy has
 Let's consider an example. You have four data points out of which two belong to the class label '1', and the other two belong to the class label '2'. You split the points such that the left partition has two data points belonging to label '1', and the right partition has the other two data points that belong to label '2'. Now let's assume that you split on some attribute called 'A'.
 
 ![title](img/InformationGain-problem.JPG)
+
+## Splitting by R-squared
+So far, you looked at splits for discrete target variables. But how is splitting done for continuous output variables? You calculate the 
+R2(r-sqaure) of data sets (before and after splitting) in a similar manner to what you do for linear regression models. Let’s understand this in detail with an example.
+
+![title](img/r-square.JPG)
+
+So split the data such that the R2 of the partitions obtained after splitting is greater than that of the original or parent data set. In other words, the fit of the model should be as ‘good’ as possible after splitting.
+
+In this module, you won't study decision tree regression in detail, but only decision tree classification, because that is what you’ll most commonly work on. However, remember that if you get a data set where you want to perform linear regression on multiple subsets, decision tree regression is a good idea.
+
+**Additional Reading** <br/>
+Decision Trees - PPT(https://www.slideshare.net/21_venkat/decision-tree-53154033)
+
