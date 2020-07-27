@@ -292,3 +292,136 @@ You are requested to read the documentation of sklearn DecisionTreeClassifier an
  Until now, we were interested in understanding the individual effects of hyperparameters to understand how they affect the resulting tree. Now, let's find the optimal combination of the hyperparameters.
 
  As you may have guessed, we will now use GridSearchCV to find the optimal combination of hyperparameters together. Note that this time, we'll also specify the criterion (gini/entropy or IG), which is a hyperparameter of decision trees.
+
+ ## Random Forests
+ Welcome to the session on '**Random Forests**'. A random forest is almost always better than a single decision tree. This is the reason why it is one of the most popular machine learning algorithms, especially in the online machine learning competition platforms, such as Kaggle.
+
+ ### Ensembles
+ In this session, you’ll learn about random forests: one of the most popular algorithms in machine learning. Random forests use a technique known as **bagging**, which is an **ensemble** method. So before diving into random forests, let's first understand ensembles.
+
+ An ensemble means a group of things viewed as a whole rather than individually. In ensembles, a **collection of models** is used to make predictions, rather than individual models. Arguably, the most popular in the family of ensemble models is the random forest: an ensemble made by the **combination of a large number of decision trees**.
+
+ In principle, ensembles can be made by combining all types of models. An ensemble can have a logistic regression, a neural network, and few decision trees working in unison.
+
+ Naturally, a few questions arise before you understand how ensembles work:
+ 1. Why should a **collection of models work better** than individual ones?
+ 2. How do you **choose the individual models** to form the ensemble, so that it is better than any of the individual models themselves?
+
+ ### Diversity and Acceptability
+ Ensembles of models are somewhat analogous to teams of individual players. If you were to choose a football team, there would be two things you’d do:
+ 1. Choose people with different skill sets, such as defenders, attackers, and a goalkeeper, to ensure **diversity**, and
+ 2. Choose good players, i.e. ensure that all players are acceptable from a skill set point of view (and at least better than a regular person).
+
+ **Diversity** ensures that the models serve **complementary** purposes, which means that the individual models make predictions **independent of each other**. The advantages of this are different depending on the type of ensemble.
+
+ For example, a random forest is an ensemble with a large number of trees as individual models. Diversity ensures that even if some trees overfit, the other trees in the ensemble will neutralise the effect. The independence among the trees results in a **lower variance** of the ensemble compared to a single tree. We will soon discuss how the learning algorithm is designed to achieve independence, and how this is beneficial.
+
+ **Acceptability** implies that each model is at least **better than a random model**. This is a pretty lenient criterion for each model to be accepted into the ensemble, i.e. it has to be at least better than a random guesser.
+
+ But how can you guarantee that if you fulfil these two conditions to make an ensemble, it will be better than any individual model?
+
+ ![title](img/diversity.JPG)
+
+
+
+  Now, to understand how an ensemble makes decisions, consider an ensemble with 100 models comprising of decision trees, logistic regression models, etc. Given a new data point, each model will predict an output y for this data point. If this is binary classification, then you simply take the majority score. If more than 50% models say y = 0, you go with 0 and vice-versa.
+
+ ![title](img/binary-classification.png)
+
+  Now, to understand how an ensemble makes decisions, consider an ensemble with 100 models comprising of decision trees, logistic regression models, etc. Given a new data point, each model will predict an output y for this data point. If this is binary classification, then you simply take the majority score. If more than 50% models say y = 0, you go with 0 and vice-versa.
+
+  Firstly, if each of the individual models is **acceptable**, i.e.they’re wrong with a probability less than 50%, you can show that the probability of the ensemble being wrong (i.e. the majority vote going wrong) will be far lesser than that of any individual model.
+
+  Also, the ensembles avoid getting misled by the **assumptions made by individual models**. For example, ensembles (particularly random forests) successfully reduce the problem of overfitting. If a decision tree in an ensemble overfits, you let it. Chances are extremely low that more than 50% of the models have overfitted. Ensembles make sure that you do not put all your eggs in one basket.
+
+  ## Creating a Random Forest
+
+  ### Bagging
+
+  To understand random forests, you will first need to understand **bagging**, an ensemble method. Bagging stands for **bootstrapped aggregation**. It is a technique for choosing random samples of observations from a dataset. Each of these samples is then used to train each tree in the forest. 
+
+  As you study bagging, keep in mind that it is just a **sampling technique** and is not specific to **random forests**.
+
+  ### Random Forests
+  In the bagging type of ensembles, random forests are by far the most successful. They are essentially ensembles of a **number of decision trees**. You create a large number of models (say, 100 decision trees), each one on a **different bootstrap sample**, from the training set. To get the result, you **aggregate** the decisions taken by all the trees in the ensemble.
+
+  ![title](img/random-forests.JPG)
+
+  ![title](img/bagging.JPG)
+
+  ![title](img/decision-tree.JPG)
+
+  ![title](img/diversity-problem.JPG)
+
+  **Bootstrapping** means creating bootstrap samples from a given data set. A bootstrap sample is created by sampling the given data set uniformly and with replacement. A bootstrap sample typically contains about 30-70% data from the data set. (A different random subset of observations is chosen, which is called the bootstrap sample, for each tree that is to be built in the forest. This is called bootstrapping.) **Aggregation** implies combining the results of different models present in the ensemble.'
+
+  You learnt that a random forest selects a random sample of data points (bootstrap sample) to build each tree, and a random sample of features while splitting a node. Randomly selecting features ensures that each tree is **diverse**.
+
+  Suppose you want to build a random forest of 10 decision trees. First, you will create 10 bootstrap samples from the data and then, **train** each tree on a different bootstrap sample. Finally, while predicting a test case, each tree will make a prediction, and the final prediction will be the **majority score** of all these predictions.
+
+  ![title](img/random-forests-properties.JPG)
+
+
+  It is worth reiterating that random forests have been much more successful than decision trees. In fact, since you learnt that ensembles are better than individual models (assuming diversity and acceptability), you can indirectly say that random forests are almost always better than decision trees! Obviously, this will be true if the trees are diverse and acceptable.
+
+### Advantages of Random Forest
+1. **Diversity** arises because you create each tree with a **subset of the attributes/features/variables**, i.e. you don’t consider all the attributes while making each tree. The choice of the attributes considered for each tree is **random**. This ensures that the trees are independent of each other.
+2. **Stability arises** because the answers given by a large number of trees average out. A random forest has a **lower model variance** than an ordinary individual tree.
+3. **Immunity to the curse of dimensionality**: Since each tree does not consider all the features, the feature space (the number of features a model has to consider) reduces. This makes the algorithm immune to the curse of dimensionality. A large feature space causes computational and complexity issues.
+4. **Parallelizability**: You need a number of trees to make a forest. Since two trees are independently built on different data and attributes, they can be built separately. This implies that you can make full use of your multi-core CPU to build random forests. Suppose there are 4 cores and 100 trees to be built; each core can build 25 trees to make a forest.
+5. **Testing /training data and the OOB or out-of-bag error**: You always want to avoid violating the fundamental tenet of learning: “not testing a model on what it has been trained on”. While building individual trees, you choose a **random** subset of the observations to train it. If you have 10,000 observations, each tree may only be made from 7000 (70%) randomly chosen observations. OOB is the mean prediction error on each training sample xᵢ, using only the trees that do not have xᵢ in their bootstrap sample. If you think about it, this is very similar to a **cross-validation error**. In a CV error, you can measure the performance on the subset of data the model hasn’t seen before.
+
+![title](img/oob.png)
+
+In fact, it has been proven that using an OOB estimate is as accurate as using a test data set of a size equal to the training set.Thus, the OOB error completely omits the need for set-aside test data (though you can still work with test data like you have been doing, at the cost of eating into the training data).
+yhe OOB error is calculated as the number of observations predicted wrongly as a proportion of the total number of observations.
+
+### Comprehension - OOB (Out-of-Bag) Error
+In the last segment, you learnt that the OOB error is almost as good as the cross-validation error. The final prediction is the aggregation of all the predictions of individual decision trees. Remember that each tree in a random forest is only trained on a random subset of the training set, which is called a bootstrapped sample. This means that for each sample (observation), there are several trees that did not include that sample, and to these trees, this sample is unseen. Let’s understand this better.
+
+Suppose there are N = 100 observations with M = 15 features, and the outcome variable is a categorical variable Y. Also, you build a random forest with 50 trees. The OOB is calculated as follows:
+
+For each observation Ni,Ni is passed to all the trees that did not have it in their training. These trees then predict the class of 
+Ni. The final prediction about Ni is decided by a majority vote.
+
+Now let’s apply this to N1. Suppose 10 trees did not have N1 in their training. But these 10 trees make their prediction about N1. Let’s say 4 trees predicted 0, and the other 6 predicted 1, as the output. The final prediction about N1 will be 1.
+
+Next, we move on to N2. Suppose 15 trees did not have N2 in their training. But these 15 trees make their prediction about N2. Let’s say 12 predicted 0, and the rest 3 predicted 1. The final prediction about N2 will be 0.
+
+This is done for each observation in the training set. Once all the predictions for each observation are calculated, the OOB error is calculated as the number of observations predicted wrongly as a proportion of the total number of observations.
+
+### Comprehension - Time Taken to Build a Random Forest
+![title](img/random-forest-time.JPG)
+
+![title](img/time-taken.JPG)
+
+### Random Forests Lab
+In this segment, you will understand how to implement **Random Forests in sklearn**. You'll experiment with hyperparameters such as the number of trees, the number of variables considered at each split, etc.
+
+[Credit Card Default Data](dataset/credit-card-default.csv)
+
+[Python Code](dataset/Random+Forest+-+Credit+Default+Prediction.ipynb)
+
+Recall that random forest takes a **sample of features** while splitting each node of its component trees. You can control the number of features considered at each split by specifying the **max_features** hyperparameter.
+
+This is one of the two additional hyperparameters in a random forest, compared to decision trees, the other one being n_estimators (the number of decision trees in the ensemble).
+
+Let's now understand why max_features is such as important attribute while building a random forest.
+
+To summarise, the max_features hyperparameter is a very important one while tuning a random forest, and as you will see in the next lecture, it can affect the results of the model significantly.
+
+Now let's see the effect of the hyperparameter max_features in action find its optimum value. We will also choose the optimal combination of hyperparameters using grid search.
+
+To summarise, you learnt how to build a random forest in sklearn. The hyperparameters in a random forest are all those that you have in a decision tree, plus two more - max_features and n_estimators. The effects of both are briefly summarised below.
+
+#### The Effect of max_features
+You saw that there is an optimal value of max_features - at very low values, the component trees are **too simple to learn anything useful**, while at extremely high values, the component trees **become similar to each other** (and violate the 'diversity' criterion). 
+
+#### The Effect of n_estimators
+Also, when you observe the plot of n_estimators and training and test accuracies, you will see that the as you increase the value of n_estimators, both the training test accuracies gradually increase. More importantly, the model does not overfit even when its complexity is increasing. This is an important benefit of random forests - you can increase the number of trees as much you like without worrying about overfitting (if your computational resources allow). 
+
+### Summary
+
+There is one more ensemble method: **'Boosting'**. Boosting is also a very popular method in online machine learning competitions, such as Kaggle. The basic idea is to **combine a lot of weak learners to get a strong learner. Weak learner** refers to a model that is slightly better than a model that predicts at random. Weak learners are built sequentially on top of each other, giving a boost to the overall performance of the model.
+
+Though we haven’t covered boosting in this session, you can learn more about it in detail in later modules.
