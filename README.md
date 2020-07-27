@@ -190,3 +190,105 @@ In this module, you won't study decision tree regression in detail, but only dec
 **Additional Reading** <br/>
 Decision Trees - PPT(https://www.slideshare.net/21_venkat/decision-tree-53154033)
 
+## Truncation and Pruning
+
+### Introduction
+Welcome to the session on **'Truncation and Pruning'**. In the previous session, you learnt about the concepts of homogeneity and the various measures of homogeneity. In this session, you will first look into the advantages and disadvantages of decision trees. Then, you will learn about various truncation and pruning strategies that are used to overcome one of the biggest disadvantages of trees: overfitting.
+
+### Advantages and Disadvantages
+Decision trees are very intuitive and promising algorithms for dealing with categorical attributes. Let’s look at some of their advantages.
+
+ The advantages are:
+ * Predictions made by a decision tree are easily interpretable.
+* A decision tree does not assume anything specific about the nature of the attributes in a data set. It can seamlessly handle all kinds of data — numeric, categorical, strings, Boolean, and so on.
+* It does not require normalisation since it has to only compare the values within an attribute.
+* Decision trees often give us an idea of the relative importance of the explanatory attributes that are used for prediction.
+
+So should decision trees be used for every case? Not really.  Let’s look at the problems associated with decision trees.
+
+The disadvantages are:
+* Decision trees tend to overfit the data. If allowed to grow with no check on its complexity, a tree will keep splitting till it has correctly classified (or rather, mugged up) all the data points in the training set.
+* Decision trees tend to be very unstable, which is an implication of overfitting. A few changes in the data can change a tree considerably.
+
+### Tree Truncation
+Earlier, you saw that decision trees have a strong tendency to overfit the data, which is a serious problem. So you have to keep an eye on the size of the tree. A very large tree will have a leaf just to cater to a single data point.
+
+There are two broad strategies to control overfitting in decision trees: **truncation and pruning**. Let's study how these two techniques help control overfitting.
+
+There are two ways to control overfitting in trees:
+1. **Truncation** - Stop the tree while it is still growing so that it may not end up with leaves containing very few data points.
+2. **Pruning** - Let the tree grow to any complexity. Then, cut the branches of the tree in a bottom-up fashion, starting from the leaves. It is more common to use pruning strategies to avoid overfitting in practical implementations.
+
+**Example of trucation**
+
+![title](img/truncation.JPG)
+
+![title](img/truncation1.JPG)
+
+Note that truncation is also known as pre-pruning.Let’s look into various ways in which you can truncate a tree:
+
+![title](img/truncation2.png)
+
+Though there are various ways to truncate or prune trees, the DecisionTreeClassifier function in sklearn provides the following hyperparameters which you can control:
+
+1. **criterion (Gini/IG or entropy)**: It defines the function to measure the quality of a split. Sklearn supports “gini” criteria for Gini Index & “entropy” for Information Gain. By default, it takes the value “gini”.
+2. **max_features**: It defines the no. of features to consider when looking for the best split. We can input integer, float, string & None value.
+    1. If an integer is inputted then it considers that value as max features at each split.
+    2. If float value is taken then it shows the percentage of features at each split.
+    3. If “auto” or “sqrt” is taken then max_features=sqrt(n_features).
+    4. If “log2” is taken then max_features= log2(n_features).
+    5. If None, then max_features=n_features. By default, it takes “None” value.
+3. **max_depth**: The max_depth parameter denotes maximum depth of the tree. It can take any integer value or None. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples. By default, it takes “None” value.
+4. **min_samples_split**: This tells above the minimum no. of samples required to split an internal node. If an integer value is taken then consider min_samples_split as the minimum no. If float, then it shows percentage. By default, it takes “2” value.
+5. **min_samples_leaf**: The minimum number of samples required to be at a leaf node. If an integer value is taken then consider - -min_samples_leaf as the minimum no. If float, then it shows percentage. By default, it takes “1” value.
+
+There are other hyperparameters as well in DecisionTreeClassifier. You can read the documentation in python using: <br/>
+*help(DecisionTreeClassifier)*
+
+### Tree Pruning
+Tree pruning is a method of chopping off parts of a tree once it is fully grown. It is a bottom-up approach used to solve the problem of overfitting. 
+
+![title](img/pruning.JPG)
+
+In pruning, you chop off the tree branches; this results in a decrease in tree complexity. It also helps in reducing overfitting.But how do you decide if a branch should be pruned or not?
+
+Before proceeding, please note that the data set is divided into three parts: the training set, the validation set and the test data. The validation set is used to tune hyperparameters, i.e. after deciding on a set of hyperparameters for a tree, you check the accuracy of the tree on the validation set.
+
+You check the performance of a pruned tree on a validation set. If the accuracy of the pruned tree is higher than the accuracy of the original tree (on the validation set), then you keep that branch chopped. Remember that the validation set is the second part of the data set, the first and third being the training and test set.
+
+**Additional Reading** <br/>
+Pruning the Tree(https://stackoverflow.com/questions/39002230/possible-to-modify-prune-learned-trees-in-scikit-learn)
+
+### Building Decision Trees in Python
+In this session, we will build a decision tree model in python.
+
+We will build a tree to predict the income of a given population, which is labelled as <= 50K and >50K. The attributes (predictors) are age, working class type, marital status, gender, race etc.
+
+[Data Set](dataset/adult_dataset.csv)
+
+[Python Code](Decision+Tree+---+Income+Prediction.ipynb)
+
+We will first have to clean and prepare the data in a format which sklearn can understand.Let's now understand the two most common ways of preparing categorical variables - **dummy variables/one hot encoding** and **label encoding**.
+
+However, you should avoid doing that in decision trees (or other tree-based, non-linear models such as random forests), since there's a better way to represent categorical variables in tree models - **label encoding**. 
+
+In previous models such as linear and logistic regression, you had created dummy variables for categorical variables, since those models (being mathematical equations) can process only numeric variables.
+
+All that is not required in decision trees, since they can process categorical variables easily using label encoding. 
+
+Now let's build the model with default parameters and try to visualize decision tree in python.
+
+### Choosing Tree Hyperparameters in Python
+How do you control the complexity (or size) of a tree? A very ‘big’ or complex tree will result in overfitting. On the other hand, if you build a relatively small tree, it may not be able to achieve a good enough accuracy (i.e. it will underfit).
+
+So what values of hyperparameters should you choose? As you would have guessed, you can use grid search cross-validation to find the optimal hyperparameters.
+
+To summarise, there are multiple hyperparameters in a decision tree such as max_depth, min_samples_leaf, min_samples_split, etc. 
+
+You are requested to read the documentation of sklearn DecisionTreeClassifier and understand the meanings of the hyperparameters. The following questions are based on the documentation.
+
+ The tree tends to overfit at high values of max_depth and low values of min_samples_leaf. Note that decision trees are notorious for overfitting - they achieve 100% training accuracy if allowed to grow too deep (while the test accuracy is of course quite lesser).
+
+ Until now, we were interested in understanding the individual effects of hyperparameters to understand how they affect the resulting tree. Now, let's find the optimal combination of the hyperparameters.
+
+ As you may have guessed, we will now use GridSearchCV to find the optimal combination of hyperparameters together. Note that this time, we'll also specify the criterion (gini/entropy or IG), which is a hyperparameter of decision trees.
