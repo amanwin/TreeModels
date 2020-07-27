@@ -130,7 +130,7 @@ A popular measure is know as Gini Index. This builds the homogenity value for th
 
 Let us take a dataset of employee where we need to predict if an employee plays football or not.
 
-![title](img/employee-dataset.png)
+![title](img/employee-dataset.JPG)
 
 ![title](img/Gini-Index.JPG)
 
