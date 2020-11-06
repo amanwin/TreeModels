@@ -266,7 +266,7 @@ We will build a tree to predict the income of a given population, which is label
 
 [Data Set](dataset/adult_dataset.csv)
 
-[Python Code](Decision+Tree+---+Income+Prediction.ipynb)
+[Python Code](dataset/Decision_Tree_Income_Prediction.ipynb)
 
 We will first have to clean and prepare the data in a format which sklearn can understand.Let's now understand the two most common ways of preparing categorical variables - **dummy variables/one hot encoding** and **label encoding**.
 
